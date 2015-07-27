@@ -13,3 +13,16 @@
     text-align: center;
     position: relative;
 }
+
+.btn-major {
+    min-height: 100px;
+}
+
+
+.btn-major a {
+    font-size: 300%;
+}
+
+.badge {
+    vertical-align:middle;
+}
