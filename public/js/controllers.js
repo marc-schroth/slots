@@ -43,7 +43,7 @@ slotsControllers.controller('PlayCtrl', ['$scope', '$routeParams', '$http', '$lo
          */
         function animateSlots() {
             // Some constants
-            var FASTEST = 200;
+            var FASTEST = 400;
             var SLOWEST = 1000;
             
             var spinningSlots = 3;
@@ -53,19 +53,19 @@ slotsControllers.controller('PlayCtrl', ['$scope', '$routeParams', '$http', '$lo
                 var rotations = Math.floor(Math.random() * 5) + 5;
                 var speedIncrement = (SLOWEST - FASTEST) / rotations;
                 // Initial animation to spin current value out of view
-                $(this).animate({top:"+=500"},"slow");
+                $(this).animate({top:"+=80vh"},"slow");
                 // Spin random values through the slot, slowing down at a linear rate with each rotation.
                 for(var i = 0; i < rotations; i++) {
                     // Move the slot up (still out of view), fill with a random value
-                    $(this).animate({top:"-500"},0,function() {
+                    $(this).animate({top:"-80vh"},0,function() {
                         $scope['slot'+(index+1)] = Math.floor(Math.random() * 3) + 1;
                         $scope.$apply();
                     });
                     // Spin the slot through the view area
-                    $(this).animate({top:"+=1000"},FASTEST + (i*speedIncrement));
+                    $(this).animate({top:"+=160vh"},FASTEST + (i*speedIncrement));
                 }
                 // Now place the final value into the slot...
-                $(this).animate({top:"-500"},0,function() {
+                $(this).animate({top:"-80vh"},0,function() {
                     $scope['slot'+(index+1)] = $scope.spinResult.spin[index];
                     $scope.$apply();
                 });
