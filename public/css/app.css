@@ -1,0 +1,15 @@
+/*
+ * animations css stylesheet
+ */
+
+.slot-frame {
+    border: 1px solid black;
+    overflow: hidden;
+}
+
+.slots {
+    font-size: 1000%;
+    font-size: 30vw;
+    text-align: center;
+    position: relative;
+}

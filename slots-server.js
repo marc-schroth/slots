@@ -1,56 +1,31 @@
 /** Required modules **/
-var http = require('http');
-var url = require('url');
-var fs = require('fs');
-
-/** Constants **/
-var DEFAULT_PORT = 10987;
+var express = require('express');
+var path = require('path');
 
 /** Globals **/
+var app = express();
 var players = {};
 
-// Server definition
-var server = http.createServer(function(request,response) {
-    // Passing true as second argument parses the query string as well.
-    var requestUrl = url.parse(request.url,true);
+/** Constants **/
+var NEW_PLAYER_CREDITS = 20;
 
-    switch(requestUrl.pathname) {
-        case '/':
-            getApp(response);
-            break;
-        case '/play':
-            playAction(requestUrl,response);
-            break;
-        default:
-            getApp(response);  
-    }
-});
-// Server listens on port number supplied by first command-line arg.
-var port = process.argv[2] || DEFAULT_PORT;
-server.listen(port);
-console.log('slots-server listening on port ' + port);
+/** Server config **/
+app.use('/', express.static(__dirname + '/public')); // Serves static files
 
-/** Response functions **/
-function getApp(response) {
-    // Serve the game page
-    response.writeHead(200, {'Content-Type':'text/html'});
-    fs.createReadStream('index.html').pipe(response);
-}
-
-function playAction(requestUrl,response) {
+app.get('/play/:playerName', function(request,response) { // Game logic
+    // Initialize response
     response.writeHead(200, {'Content-Type':'application/json'});
-    var data = { newPlayer:undefined,
-                 spinResult:undefined,
-                 credits:undefined };
+    var responseData = { newPlayer:undefined,
+                 spinResult:undefined};
     
-    // Extract data from query
-    var playerName = requestUrl.query.playerName;
-    var spin = requestUrl.query.spin;
+    // Extract data from request
+    var playerName = request.params.playerName;
+    var spin = request.query.spin;
     
     // If player doesn't exist, create and give 20 credits.
     if (players[playerName] === undefined) {
-        players[playerName] = {credits:20};
-        data.newPlayer = true;
+        players[playerName] = {playerName:playerName, credits:NEW_PLAYER_CREDITS};
+        responseData.newPlayer = true;
     }
     var player = players[playerName];
     
@@ -60,21 +35,23 @@ function playAction(requestUrl,response) {
         var spinResult = generateSpinResult();
         
         // Add spin result to response data
-        data.spinResult = spinResult;
+        responseData.spinResult = spinResult;
         
         // Adjust credit total
         player.credits += spinResult.value - 1; // -1 for cost of spin
     }
     
     // Add credits to response data, delete player if out of credits
-    data.credits = player.credits;
+    responseData.credits = player.credits;
     if (player.credits <= 0) {
         delete players[playerName];
     }
     
-    // Send response
-    response.end(JSON.stringify(data));
-}
+    // Send the response
+    response.end(JSON.stringify(responseData));    
+});
+// Server listens on port given, or 10987 by default.
+app.listen(process.argv[2] || 10987);
 
 /** Helper functions **/
 function generateSpinResult() {

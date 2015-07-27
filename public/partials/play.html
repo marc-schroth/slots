@@ -1,0 +1,19 @@
+<nav class="navbar navbar-default">
+    <div class="navbar-header">
+        <span class="navbar-brand">Initech Online Slots</span>
+    </div>
+    <p class="navbar-right">
+        <span  class="navbar-text">Signed in as {{playerName}}</span>
+        <a class="btn btn-default navbar-btn" href="#/login">Log Out</a>
+    </p>
+</nav>
+<div class="row">
+    <div class="col-xs-4 slot-frame"><div class="slots">{{slot1}}</div></div>
+    <div class="col-xs-4 slot-frame"><div class="slots">{{slot2}}</div></div>
+    <div class="col-xs-4 slot-frame"><div class="slots">{{slot3}}</div></div>
+</div>
+<div class="row">
+    <div class="btn-group btn-group-justified" role="group">
+        <a id="spin-button" class="btn btn-primary btn-lg" ng-click="spin()">SPIN <span id="credits" class="badge">{{credits}} credits</span></a>
+    </div>
+</div>
